@@ -33,7 +33,7 @@
         "kartik-v/yii2-builder": "dev-master",
         "insolita/yii2-adminlte-widgets": "dev-master",
         "ruskid/yii2-ip-behavior": "dev-master",
-        "devgroup/yii2-tag-dependency-helper": "dev-master"
+        "devgroup/yii2-tag-dependency-helper": "dev-master",
         "jlorente/yii2-command-handler": "*",
     },
     "autoload": {
