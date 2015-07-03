@@ -8,7 +8,6 @@ use yii\caching\TagDependency;
 
 use devgroup\TagDependencyHelper\ActiveRecordHelper;
 
-use app\models\User;
 use sap55\order\models\query\StoreQuery;
 
 use Rezzza\Formulate\Formula;
@@ -64,7 +63,11 @@ class Store extends \yii\db\ActiveRecord
             return $items;
         }
 
-        $stores_id = User::find()->where(['id' => Yii::$app->user->id])->with('stores')->one();
+        $userModel = \Yii::createObject([
+            'class'    => Yii::$app->user->identityClass,
+        ]);
+
+        $stores_id = $userModel::find()->where(['id' => Yii::$app->user->id])->with('stores')->one();
 
         $data = self::find()->where([
             'store_id' => ArrayHelper::getColumn($stores_id->stores, 'store_id')
