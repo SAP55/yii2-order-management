@@ -1,5 +1,5 @@
 {
-    "name": "sap55/order",
+    "name": "sap55/yii2-order-management",
     "description": "Orders Menagment System",
     "type": "yii2-extension",
     "license": "MIT",
