@@ -44,7 +44,7 @@
     "extra": {
         "bootstrap": "sap55\\order\\Bootstrap",
         "branch-alias": {
-            "dev-master": "1.0.0-dev",
+            "dev-master": "1.0.0-dev"
         },
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
