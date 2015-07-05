@@ -9,6 +9,7 @@ use yii\web\GroupUrlRule;
 
 use sap55\order\models\OrderAttribute;
 use sap55\order\models\AuthItem;
+use sap55\order\models\Store;
 
 
 class Module extends yii\base\Module
@@ -161,8 +162,12 @@ class Module extends yii\base\Module
             'class'    => Yii::$app->user->identityClass,
         ]);
 
-        $user_stores = $model::find()->where(['id' => $user_id])->with('stores')->one();
-        $stores = ArrayHelper::getColumn($user_stores->stores, 'store_id');
+        $user_stores = Store::find()->with([
+            'users' => function ($query) {
+                $query->andWhere(['id' => $user_id]);
+            }
+        ])->where(['user_id' => $user_id])->all();
+        $stores = ArrayHelper::getColumn($user_stores, 'store_id');
 
         return $stores;
     }
@@ -177,7 +182,7 @@ class Module extends yii\base\Module
             'class'    => Yii::$app->user->identityClass,
         ]);
 
-        $user_stores = $model::find()->where(['id' => Yii::$app->user->id])->with('stores')->one();
+        $user_stores = Store::find()->where(['user_id' => $user_id])->all();
         $stores = ArrayHelper::map($user_stores->stores, 'store_id', 'name');
 
         return $stores;
