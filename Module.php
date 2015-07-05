@@ -187,7 +187,7 @@ class Module extends yii\base\Module
                 $query->andWhere(['id' => $user_id]);
             }
         ])->all();
-        $stores = ArrayHelper::map($user_stores->stores, 'store_id', 'name');
+        $stores = ArrayHelper::map($user_stores, 'store_id', 'name');
 
         return $stores;
     }
