@@ -204,9 +204,16 @@ class Module extends yii\base\Module
             'class'    => Yii::$app->user->identityClass,
         ]);
 
-        $user_stores = $model::find()->where(['id' => $user_id])->with('stores.orderStatuses')->one();
+        // $user_stores = $model::find()->where(['id' => $user_id])->with('stores.orderStatuses')->one();
 
-        foreach ($user_stores->stores as $store) {
+        $user_stores = Store::find()->with([
+            'orderStatuses',
+            'users' => function ($query) {
+                $query->andWhere(['id' => $user_id]);
+            }
+        ])->all();
+
+        foreach ($user_stores as $store) {
             $orderStatus = ArrayHelper::map($store->orderStatuses, 'order_status_id', 'name');
             $orderStatuses = ArrayHelper::merge($orderStatuses, $orderStatus);
         }
