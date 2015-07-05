@@ -166,7 +166,7 @@ class Module extends yii\base\Module
             'users' => function ($query) {
                 $query->andWhere(['id' => $user_id]);
             }
-        ])->where(['user_id' => $user_id])->all();
+        ])->all();
         $stores = ArrayHelper::getColumn($user_stores, 'store_id');
 
         return $stores;
@@ -186,7 +186,7 @@ class Module extends yii\base\Module
             'users' => function ($query) {
                 $query->andWhere(['id' => $user_id]);
             }
-        ])->where(['user_id' => $user_id])->all();
+        ])->all();
         $stores = ArrayHelper::map($user_stores->stores, 'store_id', 'name');
 
         return $stores;
