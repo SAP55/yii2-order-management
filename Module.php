@@ -182,7 +182,11 @@ class Module extends yii\base\Module
             'class'    => Yii::$app->user->identityClass,
         ]);
 
-        $user_stores = Store::find()->where(['user_id' => $user_id])->all();
+        $user_stores = Store::find()->with([
+            'users' => function ($query) {
+                $query->andWhere(['id' => $user_id]);
+            }
+        ])->where(['user_id' => $user_id])->all();
         $stores = ArrayHelper::map($user_stores->stores, 'store_id', 'name');
 
         return $stores;
