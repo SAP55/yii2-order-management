@@ -15,9 +15,8 @@ use sap55\orde\models\Store;
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-class User extends UserBase
+class User extends \yii\db\ActiveRecord
 {
-
 
     public function getStores() {
         return $this->hasMany(Store::className(), ['store_id' => 'store_id'])
@@ -49,5 +48,13 @@ class User extends UserBase
         $query->andFilterWhere(['like', $usernameField, $this->username]);
 
         return $dataProvider;
+    }
+
+    /**
+     * @return [type] [description]
+     */
+    public static function tableName()
+    {
+        return \Yii::$app->authManager->itemTable;
     }
 }

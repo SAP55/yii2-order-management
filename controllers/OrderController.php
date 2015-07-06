@@ -52,22 +52,20 @@ class OrderController extends Controller
 		 */
 		public function actionIndex()
 		{
-				$this->setSubData();
+			$this->setSubData();
 
-				$searchModel = new OrderSearch();
+			$searchModel = new OrderSearch();
 
-				$dataProvider = $searchModel->search(Yii::$app->request->get(), [
-					'attributes' => $this->subData['visibleAttributes'],
-					'stores' => $this->subData['stores'],
-				]);
+			$dataProvider = $searchModel->search(Yii::$app->request->get(), [
+				'attributes' => $this->subData['visibleAttributes'],
+				'stores' => $this->subData['storesIds'],
+			]);
 
-				Yii::info(print_r($this->subData, true), '$this->subData');
-
-				return $this->render('index', [
-					'dataProvider' => $dataProvider,
-					'searchModel' => $searchModel,
-					'subData' => $this->subData
-				]);
+			return $this->render('index', [
+				'dataProvider' => $dataProvider,
+				'searchModel' => $searchModel,
+				'subData' => $this->subData
+			]);
 		}
 
 		/**
@@ -320,8 +318,8 @@ class OrderController extends Controller
 				$this->subData['editableAttributes'] = $this->module->getEditableAttributes();
 				$this->subData['systemAttributes'] = $this->module->getSystemAttributes();
 
-				$this->subData['stores'] = $this->module->getStoresByUser(Yii::$app->user->id);
-				$this->subData['userStores'] = $this->module->getUserStores(Yii::$app->user->id);
+				$this->subData['storesIds'] = $this->module->getStoresIdsByUser(Yii::$app->user->id);
+				$this->subData['userStores'] = $this->module->getStoresByUser(Yii::$app->user->id);
 
 				$this->subData['orderStatuses'] = $this->module->getOrderStatusesByUser(Yii::$app->user->id);
 				$this->subData['orderStatusesHtml'] = OrderStatus::getOrderStatusHtmlArray();

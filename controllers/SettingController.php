@@ -75,9 +75,8 @@ class SettingController extends \yii\web\Controller
         ]);
     }
 
-    public function actionEditable() 
+    public function actionEditable()
     {
-
         if (Yii::$app->request->post('hasEditable') && Yii::$app->request->post('AuthItem')) {
 
             $posted = Yii::$app->request->post('AuthItem');
@@ -108,10 +107,8 @@ class SettingController extends \yii\web\Controller
         }
     }
 
-    public function actionUpdate() 
+    public function actionUpdate()
     {
-        Yii::info('$Yii::$app->request->post = ' . print_r(Yii::$app->request->post(), true), 'pushNotifications');
-
         if (Yii::$app->request->post('hasEditable')) {
 
             $posted = Yii::$app->request->post();

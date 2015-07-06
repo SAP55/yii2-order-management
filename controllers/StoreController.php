@@ -13,8 +13,7 @@ use sap55\order\models\Store;
 use sap55\order\models\search\StoreSearch;
 use sap55\order\models\StoreGroup;
 use sap55\order\models\OrderAttribute;
-
-
+use sap55\order\models\OrderStatus;
 
 
 class StoreController extends Controller
@@ -138,7 +137,7 @@ class StoreController extends Controller
     protected function setSubData()
     {
         $this->subData['usersData'] = $this->module->getUsersArray();
-        $this->subData['orderStatuses'] = $this->module->getOrderStatusesByUser(Yii::$app->user->id);
+        $this->subData['orderStatuses'] = OrderStatus::getOrderStatusArray();
         $this->subData['orderAttributes'] = OrderAttribute::getAttributesArray();
         $this->subData['storeGroups'] = StoreGroup::getStoreGroupsArray();
     }

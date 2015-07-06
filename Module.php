@@ -152,68 +152,21 @@ class Module extends yii\base\Module
         return $role_attributes;
     }
 
-    public function getStoresByUser($user_id = 0)
+    public function getStoresIdsByUser($user_id = 0)
     {
-        if ($user_id == 0) {
-            $user_id = Yii::$app->user->id;
-        }
-
-        $model = \Yii::createObject([
-            'class'    => Yii::$app->user->identityClass,
-        ]);
-
-        $user_stores = Store::find()->with([
-            'users' => function ($query) {
-                $query->andWhere(['id' => $user_id]);
-            }
-        ])->all();
-        $stores = ArrayHelper::getColumn($user_stores, 'store_id');
-
-        return $stores;
+        return ArrayHelper::getColumn($this->getStoreQueryByUserId($user_id), 'store_id');
     }
 
-    public function getUserStores($user_id = 0)
+    public function getStoresByUser($user_id = 0)
     {
-        if ($user_id == 0) {
-            $user_id = Yii::$app->user->id;
-        }
-
-        $model = \Yii::createObject([
-            'class'    => Yii::$app->user->identityClass,
-        ]);
-
-        $user_stores = Store::find()->with([
-            'users' => function ($query) {
-                $query->andWhere(['id' => $user_id]);
-            }
-        ])->all();
-        $stores = ArrayHelper::map($user_stores, 'store_id', 'name');
-
-        return $stores;
+        return ArrayHelper::map($this->getStoreQueryByUserId($user_id), 'store_id', 'name');
     }
 
     public function getOrderStatusesByUser($user_id = 0)
     {
         $orderStatuses = [];
 
-        if ($user_id == 0) {
-            $user_id = Yii::$app->user->id;
-        }
-
-        $model = \Yii::createObject([
-            'class'    => Yii::$app->user->identityClass,
-        ]);
-
-        // $user_stores = $model::find()->where(['id' => $user_id])->with('stores.orderStatuses')->one();
-
-        $user_stores = Store::find()->with([
-            'orderStatuses',
-            'users' => function ($query) {
-                $query->andWhere(['id' => $user_id]);
-            }
-        ])->all();
-
-        foreach ($user_stores as $store) {
+        foreach ($this->getStoreQueryByUserId($user_id) as $store) {
             $orderStatus = ArrayHelper::map($store->orderStatuses, 'order_status_id', 'name');
             $orderStatuses = ArrayHelper::merge($orderStatuses, $orderStatus);
         }
@@ -223,14 +176,11 @@ class Module extends yii\base\Module
 
     public function getUsersArray()
     {
-        $query = Yii::$app->user->identityClass;
-        $dataProvider = new \yii\data\ActiveDataProvider([
-            'query' => $query::find(),
+        $model = \Yii::createObject([
+            'class'    => Yii::$app->user->identityClass,
         ]);
 
-        $usersData = ArrayHelper::map($dataProvider->getModels(), 'id', 'username');
-
-        return $usersData;
+        return ArrayHelper::map($model::find()->select(['id', 'username'])->orderBy('username ASC')->asArray()->all(), 'id', 'username');
     }
 
     public function getBgColors()
@@ -248,5 +198,16 @@ class Module extends yii\base\Module
         ];
     }
 
+
+    private function getStoreQueryByUserId($user_id)
+    {
+        if ($user_id == 0) {
+            $user_id = Yii::$app->user->id;
+        }
+
+        return Store::find()->joinWith('users')->where(['user.id' => $user_id])->with([
+            'orderStatuses'
+        ])->all();
+    }
 
 }

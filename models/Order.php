@@ -96,7 +96,7 @@ class Order extends \yii\db\ActiveRecord implements Receiver
         $view = 'notification';
 
         $mailer = Yii::$app->mailer;
-        $mailer->viewPath = '@app/modules/order/views/mail';
+        $mailer->viewPath = '@sap55/order/views/mail';
         $mailer->getView()->theme = \Yii::$app->view->theme;
 
         $store = Store::findOne($this->store_id);

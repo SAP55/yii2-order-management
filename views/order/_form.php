@@ -35,12 +35,12 @@ $attributes = [
     'payment_method_id' => [
     	'type' => in_array('payment_method_id', $subData['editableAttributes']) ? Form::INPUT_DROPDOWN_LIST : Form::INPUT_STATIC,
     	'items' => $subData['paymentMethods'],
-    	'staticValue' => ArrayHelper::getValue($subData['paymentMethods'], $model->payment_method_id, Yii::t('order', '(not set)'))),
+    	'staticValue' => ArrayHelper::getValue($subData['paymentMethods'], $model->payment_method_id, Yii::t('order', '(not set)')),
 	],
     'payment_status_id' => [
     	'type' => in_array('payment_status_id', $subData['editableAttributes']) ? Form::INPUT_DROPDOWN_LIST : Form::INPUT_STATIC,
     	'items' => $subData['paymentStatusesList'],
-    	'staticValue' => ArrayHelper::getValue($subData['paymentStatusesHtml'], $model->payment_status_id, Yii::t('order', '(not set)'))),
+    	'staticValue' => ArrayHelper::getValue($subData['paymentStatusesHtml'], $model->payment_status_id, Yii::t('order', '(not set)')),
     ],
     'payment_text' => [
     	'type' => in_array('payment_text', $subData['editableAttributes']) ? Form::INPUT_TEXTAREA : Form::INPUT_STATIC,
@@ -51,7 +51,7 @@ $attributes = [
     'shipping_method_id' => [
     	'type' => in_array('shipping_method_id', $subData['editableAttributes']) ? Form::INPUT_DROPDOWN_LIST : Form::INPUT_STATIC,
     	'items' => $subData['shippingMethods'],
-    	'staticValue' => ArrayHelper::getValue($subData['shippingMethods'], $model->shipping_method_id, Yii::t('order', '(not set)'))),
+    	'staticValue' => ArrayHelper::getValue($subData['shippingMethods'], $model->shipping_method_id, Yii::t('order', '(not set)')),
 	],
     'shipping_tracking' => [
     	'type' => in_array('shipping_tracking', $subData['editableAttributes']) ? Form::INPUT_TEXT : Form::INPUT_STATIC,

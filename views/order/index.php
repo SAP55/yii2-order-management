@@ -118,7 +118,7 @@ $columns = [
             return $model->store->name;
         },
         'filterType' => GridView::FILTER_SELECT2,
-        'filter'=> $subData['userStores'], 
+        'filter'=> $subData['userStores'],
         'filterWidgetOptions' => [
             'options' => [
                 // 'multiple' => true,
