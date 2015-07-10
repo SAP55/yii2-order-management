@@ -3,26 +3,23 @@
 namespace sap55\order;
 
 use Yii;
+use yii\base\Module as BaseModule;
+use yii\data\ActiveDataProvider;
+use yii\web\NotFoundHttpException;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
-use yii\web\GroupUrlRule;
 
 use sap55\order\models\OrderAttribute;
 use sap55\order\models\AuthItem;
 use sap55\order\models\Store;
 
 
-class Module extends yii\base\Module
+class Module extends BaseModule
 {
 
     CONST CACHE_ORDER = 'orderModule';
 
     public $usernameField = 'username';
-
-    public $visible_attributes = [];
-    public $editable_attributes = [];
-    public $stores = [];
-    public $orderStatuses = [];
 
     private $bgColors = [
         'bg-light-blue',
@@ -43,37 +40,19 @@ class Module extends yii\base\Module
         'bg-fuchsia',
     ];
 
-
     /**
-     * @var string The prefix for user module URL.
+     * @var string The prefix for order module URL.
      * @See [[GroupUrlRule::prefix]]
      */
     public $urlPrefix = 'order';
 
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
-        '<id:\d+>' => 'order/view',
-        // '<action:(dashboard2)>' => 'order/index',
-        'setting' => 'setting',
-        'dashboard'       => 'order/index',
-        '<action:\w+>' => 'order/<action>',
+        '<id:\d+>'      => 'order/view',
+        'setting'       => 'setting',
+        'dashboard'     => 'order/index',
+        '<action:\w+>'  => 'order/<action>',
     ];
-
-
-    public function init()
-    {
-        parent::init();
-
-        // $this->setAttributes();
-        // $this->setStores();
-
-        $groupUrlRule = new GroupUrlRule([
-            'prefix' => $this->urlPrefix,
-            'rules' => $this->urlRules,
-        ]);
-        
-        Yii::$app->getUrlManager()->addRules($groupUrlRule->rules, false);
-    }
 
 
     public function behaviors()
@@ -101,7 +80,7 @@ class Module extends yii\base\Module
 
     public function getEditableAttributes()
     {
-        $attributes = array_merge($this->getAttributesByRole()->editable_attributes, $this->getSystemAttributes());
+        $attributes = ArrayHelper::merge($this->getAttributesByRole()->editable_attributes, $this->getOrderAttributes('system'));
 
         return $attributes;
     }
@@ -130,26 +109,24 @@ class Module extends yii\base\Module
             $order_attributes = OrderAttribute::find()->system()->asArray()->all();
         }
 
-        return ArrayHelper::map($order_attributes, 'attribute_name', 'attribute_name');
-    }
-
-    public function getSystemAttributes()
-    {
-        $order_attributes = OrderAttribute::find()->system()->asArray()->all();
-        $order_attributes = ArrayHelper::getColumn($order_attributes, 'attribute_name');
-
-        return $order_attributes;
+        if ($order_attributes !== null)
+            return ArrayHelper::getColumn($order_attributes, 'attribute_name');
+        else
+            return [];
     }
 
     public function getAttributesByRole()
     {
-        $role_attributes = AuthItem::find()
+        $model = AuthItem::find()
             ->select('name')
             ->where(['name' => $this->getRolesByUser()])
             ->with('visibleAttributes', 'editableAttributes')
             ->one();
 
-        return $role_attributes;
+        if ($model->visibleAttributes !== null || $model->editableAttributes !== null)
+            return $model;
+        else
+            throw new NotFoundHttpException('The project not have any roles configured.');
     }
 
     public function getStoresIdsByUser($user_id = 0)
@@ -180,7 +157,12 @@ class Module extends yii\base\Module
             'class'    => Yii::$app->user->identityClass,
         ]);
 
-        return ArrayHelper::map($model::find()->select(['id', 'username'])->orderBy('username ASC')->asArray()->all(), 'id', 'username');
+        $query = $model::find();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return ArrayHelper::map($model::find()->select(['id', $this->usernameField])->orderBy($this->usernameField . ' ASC')->asArray()->all(), 'id', $this->usernameField);
     }
 
     public function getBgColors()

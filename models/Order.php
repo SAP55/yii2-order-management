@@ -383,6 +383,6 @@ class Order extends \yii\db\ActiveRecord implements Receiver
      */
     public static function tableName()
     {
-        return 'order';
+        return 'order_item';
     }
 }

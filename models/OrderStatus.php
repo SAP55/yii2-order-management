@@ -10,9 +10,6 @@ use devgroup\TagDependencyHelper\ActiveRecordHelper;
 
 use kartik\helpers\Html;
 
-use sap55\order\models\Order;
-use sap55\order\models\Store;
-
 /**
  * This is the model class for table "order_status".
  *

@@ -75,31 +75,31 @@ class OrderController extends Controller
 		 */
 		public function actionView($id)
 		{
-				$model = $this->findModel($id);
+			$model = $this->findModel($id);
 
-				$query = new Query();
-				$orderHistory = new ActiveDataProvider([
-						'query' => OrderHistory::find()
-								->where([
-										'order_id' => $model->order_id,
-										'attribute' => 'order_status_id'
-								]),
-								'sort' => [
-										'defaultOrder' => [
-												// 'attribute' => SORT_ASC,
-												'create_time' => SORT_ASC
-										]
-								],
-								'pagination' => [
-										'pageSize' => 25,
-								],
-				]);
+			$query = new Query();
+			$orderHistory = new ActiveDataProvider([
+				'query' => OrderHistory::find()
+					->where([
+						'order_id' => $model->order_id,
+						'attribute' => 'order_status_id'
+					]),
+					'sort' => [
+						'defaultOrder' => [
+								// 'attribute' => SORT_ASC,
+								'create_time' => SORT_ASC
+						]
+					],
+					'pagination' => [
+						'pageSize' => 25,
+					],
+			]);
 
-				return $this->render('view', [
-						'model' => $model,
-						'orderHistory' => $orderHistory,
-						'subData' => $this->subData
-				]);
+			return $this->render('view', [
+				'model' => $model,
+				'orderHistory' => $orderHistory,
+				'subData' => $this->subData
+			]);
 		}
 
 		/**
@@ -316,7 +316,7 @@ class OrderController extends Controller
 		{
 				$this->subData['visibleAttributes'] = $this->module->getVisiableAttributes();
 				$this->subData['editableAttributes'] = $this->module->getEditableAttributes();
-				$this->subData['systemAttributes'] = $this->module->getSystemAttributes();
+				$this->subData['systemAttributes'] = $this->module->getOrderAttributes('system');
 
 				$this->subData['storesIds'] = $this->module->getStoresIdsByUser(Yii::$app->user->id);
 				$this->subData['userStores'] = $this->module->getStoresByUser(Yii::$app->user->id);
